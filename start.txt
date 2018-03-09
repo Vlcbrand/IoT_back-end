@@ -1,0 +1,11 @@
+************************************
+***********START OF PROGRAM*********
+************************************
+
+1. open cmd (admin) and navigate to the mongo/server/3.6/bin
+2. type mongod ,hit enter
+3. open webstorm terminal and type: node app.js
+
+everything should work now and the database is located on localhost with port 27017.
+
+if this does not work, open a second command prompt and navigate to the same bin folder, then instead of running mongod you run mongo (after mongod is running)

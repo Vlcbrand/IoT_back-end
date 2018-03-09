@@ -1,0 +1,15 @@
+let mongoose = require('mongoose');
+
+//user schema  WORKS!
+let userSchema = mongoose.Schema({
+    Name:{
+        type: String,
+        required : true
+    },
+    password:{
+        type: String,
+        required:true
+    }
+});
+
+let Users = module.exports = mongoose.model('Users', userSchema);
