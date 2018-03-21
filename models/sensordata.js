@@ -1,7 +1,7 @@
-let mongoose = require('mongoose');
+var mongoose = require('mongoose');
 
 //sensordata schema
-let sensorSchema = mongoose.Schema({
+var sensorSchema = mongoose.Schema({
     data:{
         type: Number,
         required : true
@@ -12,4 +12,4 @@ let sensorSchema = mongoose.Schema({
     }
 });
 
-let Sensor = module.exports = mongoose.model('Sensor', sensorSchema);
+var Sensor = module.exports = mongoose.model('Sensor', sensorSchema);
