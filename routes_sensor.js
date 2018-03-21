@@ -15,7 +15,7 @@ const mqtt = require('mqtt');
 const mqttTopic = require('./config.json').mqttTopic;
 const mqttBroker = require('./config.json').mqttBroker;
 //connect to MQTT broker an subscribe on topic
-const mqttClient = mqtt.connect( mqttBroker );
+const mqttClient = mqtt.connect(mqttBroker);
 mqttClient.subscribe(mqttTopic);
 
 //receive MQTT data and put it in the database
@@ -37,7 +37,7 @@ router.all('*', (req, res, next) => {
     next();
 });
 
-router.get('/getAllSensorData',function (req, res) {
+router.get('/getAllSenosrData',function (req, res) {
     Sensormodel.find({},function (err, response) {
         res.json(({response:response}));
     });

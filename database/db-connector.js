@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost/nodesensor');
+mongoose.connect('mongodb://37.97.180.203:27017/admin');
 db= mongoose.connection;
 
 //check connection
