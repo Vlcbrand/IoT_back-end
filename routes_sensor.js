@@ -37,6 +37,13 @@ router.all('*', (req, res, next) => {
     next();
 });
 
+router.get('/last24Hours', function (req,res) {
+    Sensormodel.find({"timestamp":{$gt:new Date(Date.now() - 24*60*60 * 1000)}}, function (err, response) {
+        res.json(({response:response}));
+    })
+
+})
+
 router.get('/getAllSenosrData',function (req, res) {
     Sensormodel.find({},function (err, response) {
         res.json(({response:response}));
