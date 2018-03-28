@@ -4,7 +4,7 @@ var mongoose = require('mongoose');
 var sensorSchema = mongoose.Schema({
     data:{
         type: Number,
-        required : true
+        default:0.1
     },
     timestamp:{
         type: Date,
