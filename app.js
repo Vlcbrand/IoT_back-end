@@ -3,6 +3,7 @@ var bodyParser      = require('body-parser');
 var routes_sensor   = require('./routes_sensor');
 var settings        = require('./config.json');
 const _             = require('./database/db-connector');
+var cors            = require('cors');
 
 var app             = express();
 
@@ -19,6 +20,8 @@ app.all('*', function (req, res, next) {
     console.log(req.method + " " + req.url);
     next();
 });
+
+app.use(cors({origin: '37.97.180.203:1833'}))
 
 // Middleware statische bestanden (HTML, CSS, images)
 app.use('/static', express.static(__dirname + '/public'));
