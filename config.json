@@ -5,5 +5,5 @@
   "dbServer" :    "localhost",
   "webPort" :     "1833",
   "mqttBroker":   "mtqq://test.mosquitto.org:1883",
-  "mqttTopic":    "Testdbtopic123"
+  "mqttTopic":    "meterkastTVM"
 }
