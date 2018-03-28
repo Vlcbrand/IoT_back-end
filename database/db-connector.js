@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://37.97.180.203:27017/admin');
+mongoose.connect('mongodb://user:admin@37.97.180.203:27017/admin');
 db= mongoose.connection;
 
 //check connection
