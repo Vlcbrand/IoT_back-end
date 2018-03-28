@@ -18,10 +18,16 @@ app.use(bodyParser.json());
 // Middelware, logging voor alle request
 app.all('*', function (req, res, next) {
     console.log(req.method + " " + req.url);
+    res.setHeader('Access-Control-Allow-Origin', '*');
     next();
 });
 
-app.use(cors({origin: '37.97.180.203:1833'}))
+// Routing with versions
+app.use(function(req, res, next) {
+    next();
+});
+
+//app.use(cors({origin: '37.97.180.203:1833'}))
 
 // Middleware statische bestanden (HTML, CSS, images)
 app.use('/static', express.static(__dirname + '/public'));
