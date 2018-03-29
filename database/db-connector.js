@@ -5,7 +5,7 @@ db= mongoose.connection;
 
 //check connection
 db.once('open',function () {
-    console.log('connected to mongoDB nodesensor');
+    console.log('connected to mongoDB Meterkast');
 });
 
 //check for Db errors
