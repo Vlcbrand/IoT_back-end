@@ -73,7 +73,7 @@ router.get('/message', (req, res) => {
     res.json({test: "test"});
 });
 
-router.post('/getUser',function (req,res) {
+router.get('/getUser',function (req,res) {
 
     var testUser = new UserModel({
         Name:'superadmin',
