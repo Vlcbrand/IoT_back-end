@@ -38,8 +38,8 @@ router.all('*', (req, res, next) => {
 
 //test for parameters in URL *works*
 router.get('/getBetweenDates/:time1/:time2/:hours',function (req, res) {
-    let data;
-    let increment = req.params.hours / 5;
+    var data;
+    var increment = req.params.hours / 5;
     Sensormodel.find({"timestamp": {$gt: req.params.time1, $lt: req.params.time2}}, function (err, response) {
         data = response;
     });
@@ -63,7 +63,7 @@ router.get('/getBetweenDates/:time1/:time2/:hours',function (req, res) {
 
 function calculateDataFromTimestamp(oldDate, increment){
     newDate = new Date(oldDate + increment*60*60 * 1000);
-    let data;
+    var data;
 
     Sensormodel.find({"timestamp":{$gt:oldDate, $lt:newDate}},function (err, response) {
         response = data;
