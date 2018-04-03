@@ -37,28 +37,56 @@ router.all('*', (req, res, next) => {
 });
 
 //test for parameters in URL *works*
-router.get('/getBetweenTime/:time1/:time2',function (req, res) {
-    if(req.params.time1 === "1"){
-        res.json({test: 'test'});
-    }
+router.get('/getBetweenDates/:time1/:time2/:hours',function (req, res) {
+    let data;
+    let increment = req.params.hours / 5;
+    Sensormodel.find({"timestamp": {$gt: req.params.time1, $lt: req.params.time2}}, function (err, response) {
+        data = response;
+    });
+    var beginDate = data[0].timestamp;
 
-    if(req.params.time1 === "2"){
-        res.json({test: 'test1'});
-    }
+    res.json({
+        response: {
+            time0: data[0].timestamp,
+            data0: 0,
+            time1: data[calculateDataFromTimestamp(beginDate, increment)-1].timestamp,
+            data1: calculateDataFromTimestamp(beginDate, increment),
+            time2: data[calculateDataFromTimestamp(beginDate, increment * 2)-1].timestamp,
+            data2: calculateDataFromTimestamp(beginDate, increment * 2),
+            time3: data[calculateDataFromTimestamp(beginDate, increment * 3)-1].timestamp,
+            data3: calculateDataFromTimestamp(beginDate, increment * 3),
+            time4: data[data.length-1].timestamp,
+            data4: data.length
+        }
+    });
+}
 
-});
+function calculateDataFromTimestamp(oldDate, increment){
+    newDate = new Date(oldDate + increment*60*60 * 1000);
+    let data;
+
+    Sensormodel.find({"timestamp":{$gt:oldDate, $lt:newDate}},function (err, response) {
+        response = data;
+    })
+
+    return data.length
+}
 
 router.get('/getLast12Hours', function (req,res) {
     Sensormodel.find({"timestamp":{$gt:new Date(Date.now() - 24*60*60 * 1000)}}, function (err, response) {
         res.json(({response:response}));
     })
-
 });
+
 
 router.get('/getAllSensorData',function (req, res) {
     Sensormodel.find({},function (err, response) {
         res.json(({response:response}));
     });
+
+
+
+
 });
 
 //
