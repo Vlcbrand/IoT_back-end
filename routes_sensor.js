@@ -59,7 +59,7 @@ router.get('/getBetweenDates/:time1/:time2/:hours',function (req, res) {
             data4: data.length
         }
     });
-}
+})
 
 function calculateDataFromTimestamp(oldDate, increment){
     newDate = new Date(oldDate + increment*60*60 * 1000);
@@ -67,7 +67,7 @@ function calculateDataFromTimestamp(oldDate, increment){
 
     Sensormodel.find({"timestamp":{$gt:oldDate, $lt:newDate}},function (err, response) {
         response = data;
-    })
+    });
 
     return data.length
 }
