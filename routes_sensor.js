@@ -26,7 +26,8 @@ mqttClient.on('message', function (topic, message) {
 
     newData.save(function (err, data) {
         if (err) console.log(err);
-        else console.log('Saved : ', data );
+        //else
+            //console.log('Saved : ', data );
     });
 });
 
@@ -40,36 +41,54 @@ router.all('*', (req, res, next) => {
 router.get('/getBetweenDates/:time1/:time2/:hours',function (req, res) {
     var data;
     var increment = req.params.hours / 5;
-    Sensormodel.find({"timestamp": {$gt: req.params.time1, $lt: req.params.time2}}, function (err, response) {
-        data = response;
-    });
-    var beginDate = data[0].timestamp;
 
-    res.json({
-        response: {
-            time0: data[0].timestamp,
-            data0: 0,
-            time1: data[calculateDataFromTimestamp(beginDate, increment)-1].timestamp,
-            data1: calculateDataFromTimestamp(beginDate, increment),
-            time2: data[calculateDataFromTimestamp(beginDate, increment * 2)-1].timestamp,
-            data2: calculateDataFromTimestamp(beginDate, increment * 2),
-            time3: data[calculateDataFromTimestamp(beginDate, increment * 3)-1].timestamp,
-            data3: calculateDataFromTimestamp(beginDate, increment * 3),
-            time4: data[data.length-1].timestamp,
-            data4: data.length
-        }
+    Sensormodel.find({"timestamp": {$gt: new Date(req.params.time1), $lt:  new Date(req.params.time2)}}, async function (err, response) {
+        data = response;
+        var beginDate = req.params.time1;
+        var test = await calculateDataFromTimestamp(beginDate, increment, async function(test) {
+            var testv2 = await calculateDataFromTimestamp(beginDate, increment*2, async function(test2) {
+                var testv3 = await calculateDataFromTimestamp(beginDate, increment*3, async function(test3) {
+                    var testv4 = await calculateDataFromTimestamp(beginDate, increment*4, async function(test4) {
+                        res.json({
+                            response: [{
+                                'name': 'Meterkast',
+                                'series': [{
+                                'name': data[0].timestamp,
+                                'value': 0,
+                            }, {
+                                'name': data[test].timestamp,
+                                'value': test/10000,
+                            }, {
+                                'name': data[test2].timestamp,
+                                'value': test2/10000,
+                            }, {
+                                'name': data[test3].timestamp,
+                                'value': test3/10000,
+                            }, {
+                                'name': data[data.length-1].timestamp,
+                                'value': data.length/10000
+                            }]
+                            }]
+                        });
+                    })
+                })
+            })
+        })
+
+
+
     });
 })
 
-function calculateDataFromTimestamp(oldDate, increment){
-    newDate = new Date(oldDate + increment*60*60 * 1000);
+async function calculateDataFromTimestamp(oldDate, increment, fn){
+    var newDate = new Date(oldDate)
+    newDate.setHours(newDate.getHours()+increment)
     var data;
 
-    Sensormodel.find({"timestamp":{$gt:oldDate, $lt:newDate}},function (err, response) {
-        response = data;
+     await Sensormodel.find({"timestamp":{$gt:new Date(oldDate), $lt:new Date(newDate)}},async function (err, response) {
+        data = response
+        fn(data.length)
     });
-
-    return data.length
 }
 
 router.get('/getLast12Hours', function (req,res) {
