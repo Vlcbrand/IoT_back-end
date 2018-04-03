@@ -73,11 +73,11 @@ router.get('/message', (req, res) => {
     res.json({test: "test"});
 });
 
-router.post('/testUser',function (req,res) {
+router.post('/getUser',function (req,res) {
 
-    var testuser = new UserModel({
-        Name:'user3',
-        password: 'password3'
+    var testUser = new UserModel({
+        Name:'superadmin',
+        password: 'superadmin'
     });
 
     testuser.save(function (err,data) {
