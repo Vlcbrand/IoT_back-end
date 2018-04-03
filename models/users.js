@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 
-//user schema  WORKS!
+// user schema  WORKS!
 var userSchema = mongoose.Schema({
     Name:{
         type: String,
@@ -8,7 +8,7 @@ var userSchema = mongoose.Schema({
     },
     password:{
         type: String,
-        required:true
+        required : true
     }
 });
 
