@@ -102,18 +102,10 @@ router.get('/message', (req, res) => {
 });
 
 router.get('/getUser',function (req,res) {
+    UserModel.find({'Name':"superadmin"},function (err, response) {
+        res.json({reponse:response});
+    })
 
-    var testUser = new UserModel({
-        Name:'superadmin',
-        password: 'superadmin'
-    });
-
-    testuser.save(function (err,data) {
-        if (err) console.log(err);
-        else console.log('Saved : ', data );
-    });
-
-    res.status(300);
 })
 
 
