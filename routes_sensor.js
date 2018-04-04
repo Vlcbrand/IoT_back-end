@@ -26,8 +26,8 @@ mqttClient.on('message', function (topic, message) {
 
     newData.save(function (err, data) {
         if (err) console.log(err);
-        //else
-            //console.log('Saved : ', data );
+        else
+            console.log('Saved : ', data );
     });
 });
 
