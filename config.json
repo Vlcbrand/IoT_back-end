@@ -4,6 +4,6 @@
   "dbSchema" :    "",
   "dbServer" :    "localhost",
   "webPort" :     "1833",
-  "mqttBroker":   "mtqq://37.97.180.203:1883",
+  "mqttBroker":   "mqtt://37.97.180.203:1883",
   "mqttTopic":     "meterkastTVM"
 }
