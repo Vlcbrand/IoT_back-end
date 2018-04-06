@@ -60,10 +60,10 @@ router.get('/getBetweenDates/:time1/:time2/:hours',function (req, res) {
                                 'value': test/10000,
                             }, {
                                 'name': data[test2].timestamp,
-                                'value': test2/10000,
+                                'value': (test2)/10000,
                             }, {
                                 'name': data[test3].timestamp,
-                                'value': test3/10000,
+                                'value': (test3)/10000,
                             }, {
                                 'name': data[data.length-1].timestamp,
                                 'value': data.length/10000
@@ -74,15 +74,15 @@ router.get('/getBetweenDates/:time1/:time2/:hours',function (req, res) {
                 })
             })
         })
-
-
-
     });
-})
+});
 
 async function calculateDataFromTimestamp(oldDate, increment, fn){
-    var newDate = new Date(oldDate)
+    let newDate = new Date(oldDate)
     newDate.setHours(newDate.getHours()+increment)
+    let minutes = increment % 1;
+    newDate.setMinutes(minutes *60);
+
     var data;
 
      await Sensormodel.find({"timestamp":{$gt:new Date(oldDate), $lt:new Date(newDate)}},async function (err, response) {
