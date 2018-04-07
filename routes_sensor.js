@@ -22,17 +22,17 @@ const mqttClient = mqtt.connect(mqttBroker);
 mqttClient.subscribe(mqttTopic);
 
 //receive MQTT data and put it in the database
-// mqttClient.on('message', function (topic, message) {
-//
-//     var newData = new Sensormodel({
-//     });
-//
-//     newData.save(function (err, data) {
-//         if (err) console.log(err);
-//         else
-//             console.log('Saved : ', data );
-//     });
-// });
+mqttClient.on('message', function (topic, message) {
+
+    var newData = new Sensormodel({
+    });
+
+    newData.save(function (err, data) {
+        if (err) console.log(err);
+        else
+            console.log('Saved : ', data );
+    });
+});
 
 
 //
