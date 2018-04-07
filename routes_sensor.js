@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
+const AES = require('crypto-js/AES');
+const SHA256 = require('crypto-js/sha256');
+
 //init mongoose & models
 const mongoose = require('mongoose');
 
@@ -19,17 +22,17 @@ const mqttClient = mqtt.connect(mqttBroker);
 mqttClient.subscribe(mqttTopic);
 
 //receive MQTT data and put it in the database
-mqttClient.on('message', function (topic, message) {
-
-    var newData = new Sensormodel({
-    });
-
-    newData.save(function (err, data) {
-        if (err) console.log(err);
-        else
-            console.log('Saved : ', data );
-    });
-});
+// mqttClient.on('message', function (topic, message) {
+//
+//     var newData = new Sensormodel({
+//     });
+//
+//     newData.save(function (err, data) {
+//         if (err) console.log(err);
+//         else
+//             console.log('Saved : ', data );
+//     });
+// });
 
 
 //
@@ -91,6 +94,14 @@ async function calculateDataFromTimestamp(oldDate, increment, fn){
     });
 }
 
+router.get('/testEncrypt/:message1/:message2',function (req, res) {
+    var a = SHA256(req.params.message1).toString();
+    var b = SHA256(req.params.message2).toString();
+
+    res.json({a:a, b:b})
+
+});
+
 router.get('/getLast12Hours', function (req,res) {
     Sensormodel.find({"timestamp":{$gt:new Date(Date.now() - 24*60*60 * 1000)}}, function (err, response) {
         res.json(({response:response}));
@@ -120,11 +131,15 @@ router.get('/message', (req, res) => {
     res.json({test: "test"});
 });
 
-router.get('/getUser',function (req,res) {
-    UserModel.find({'Name':"superadmin"},function (err, response) {
-        res.json({reponse:response});
-    })
-
+router.get('/getUser/:username/:password',async function (req,res) {
+    const user = await  UserModel.find({'Name':req.params.username, 'Password':SHA256(req.params.password).toString()},function (err,docs) {
+        if(docs.length == 0)
+            res.json({response: {error: 'no right credentials'}})
+        else if(req.params.username == 'superadmin')
+            res.json({response: {role: 'admin'}});
+        else
+            res.json({response: {role: 'user'}});
+    }).lean()
 })
 
 
