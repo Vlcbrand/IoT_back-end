@@ -22,17 +22,17 @@ const mqttClient = mqtt.connect(mqttBroker);
 mqttClient.subscribe(mqttTopic);
 
 //receive MQTT data and put it in the database
-mqttClient.on('message', function (topic, message) {
-
-    var newData = new Sensormodel({
-    });
-
-    newData.save(function (err, data) {
-        if (err) console.log(err);
-        else
-            console.log('Saved : ', data );
-    });
-});
+// mqttClient.on('message', function (topic, message) {
+//
+//     var newData = new Sensormodel({
+//     });
+//
+//     newData.save(function (err, data) {
+//         if (err) console.log(err);
+//         else
+//             console.log('Saved : ', data );
+//     });
+// });
 
 
 //
@@ -113,10 +113,6 @@ router.get('/getAllSensorData',function (req, res) {
     Sensormodel.find({},function (err, response) {
         res.json(({response:response}));
     });
-
-
-
-
 });
 
 //
@@ -132,9 +128,10 @@ router.get('/message', (req, res) => {
 });
 
 router.get('/getUser/:username/:password',async function (req,res) {
+    console.log(SHA256(req.params.password).toString())
     const user = await  UserModel.find({'Name':req.params.username, 'Password':SHA256(req.params.password).toString()},function (err,docs) {
         if(docs.length == 0)
-            res.json({response: {error: 'no right credentials'}})
+            res.json({response: {role: 'no right credentials'}})
         else if(req.params.username == 'superadmin')
             res.json({response: {role: 'admin'}});
         else
@@ -142,7 +139,22 @@ router.get('/getUser/:username/:password',async function (req,res) {
     }).lean()
 })
 
-
+router.post('/newUser/:username/:password',function (req, res) {
+    UserModel.find({'Name':req.params.username}, function (err, docs) {
+        if(docs.length > 0){
+            res.json({response: {saved: 'unsuccessfully'}});
+        } else {
+            newUser = new UserModel({Name:req.params.username, password: SHA256(req.params.password).toString()});
+            newUser.save(function (err, data) {
+                if (err) console.log(err);
+                else{
+                    console.log('Saved : ', data );
+                    res.json({response:{saved:'successfully'}})
+                }
+            });
+        }
+    })
+})
 /**
  * catch all
  */
