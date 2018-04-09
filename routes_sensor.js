@@ -51,10 +51,10 @@ router.get('/getBetweenDates/:time1/:time2/:hours',function (req, res) {
     Sensormodel.find({"timestamp": {$gt: new Date(req.params.time1), $lt:  new Date(req.params.time2)}}, async function (err, response) {
         data = response;
         var beginDate = req.params.time1;
-        var test = await calculateDataFromTimestamp(beginDate, increment, async function(test) {
-            var testv2 = await calculateDataFromTimestamp(beginDate, increment*2, async function(test2) {
-                var testv3 = await calculateDataFromTimestamp(beginDate, increment*3, async function(test3) {
-                    var testv4 = await calculateDataFromTimestamp(beginDate, increment*4, async function(test4) {
+        var test = await calculateDataFromTimestamp(beginDate, increment*1.25, async function(test) {
+            var testv2 = await calculateDataFromTimestamp(beginDate, increment*2.5, async function(test2) {
+                var testv3 = await calculateDataFromTimestamp(beginDate, increment*3.75, async function(test3) {
+                    var testv4 = await calculateDataFromTimestamp(beginDate, increment*5, async function(test4) {
                         res.json({
                             response: [{
                                 'name': 'Meterkast',
@@ -130,8 +130,8 @@ router.get('/message', (req, res) => {
     res.json({test: "test"});
 });
 
-router.get('/getUser/:username/:password',async function (req,res) {
-    const user = await  UserModel.find({'Name':req.params.username, 'Password':SHA256(req.params.password).toString()},function (err,docs) {
+router.get('/getUser/:username/:password', function (req,res) {
+    const user =  UserModel.find({'Name':req.params.username, 'Password':SHA256(req.params.password).toString()},function (err,docs) {
         if(docs.length == 0)
             res.json({response: {role: 'no right credentials'}})
         else if(req.params.username == 'superadmin') {
