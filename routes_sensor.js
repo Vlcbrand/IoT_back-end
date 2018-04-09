@@ -13,6 +13,9 @@ var Sensormodel = mongoose.model('Sensor');
 require('./models/users');
 var UserModel = mongoose.model('Users');
 
+require('./models/Log');
+var LogModel = mongoose.model('Log');
+
 //init MQTT
 const mqtt = require('mqtt');
 const mqttTopic = require('./config.json').mqttTopic;
@@ -128,23 +131,26 @@ router.get('/message', (req, res) => {
 });
 
 router.get('/getUser/:username/:password',async function (req,res) {
-    console.log(SHA256(req.params.password).toString())
     const user = await  UserModel.find({'Name':req.params.username, 'Password':SHA256(req.params.password).toString()},function (err,docs) {
         if(docs.length == 0)
             res.json({response: {role: 'no right credentials'}})
-        else if(req.params.username == 'superadmin')
+        else if(req.params.username == 'superadmin') {
             res.json({response: {role: 'admin'}});
-        else
+        }
+        else {
+            const log = new LogModel({name: req.params.username})
+            log.save()
             res.json({response: {role: 'user'}});
+        }
     }).lean()
 })
 
-router.post('/newUser/:username/:password',function (req, res) {
-    UserModel.find({'Name':req.params.username}, function (err, docs) {
+router.post('/newUser',function (req, res) {
+    UserModel.find({'Name':req.body.username}, function (err, docs) {
         if(docs.length > 0){
             res.json({response: {saved: 'unsuccessfully'}});
         } else {
-            newUser = new UserModel({Name:req.params.username, password: SHA256(req.params.password).toString()});
+            newUser = new UserModel({Name:req.body.username, Password: SHA256(req.body.password).toString()});
             newUser.save(function (err, data) {
                 if (err) console.log(err);
                 else{
@@ -155,6 +161,13 @@ router.post('/newUser/:username/:password',function (req, res) {
         }
     })
 })
+
+router.get('/getLogs',function (req,res) {
+    LogModel.find({},function (err, response) {
+        res.json({response:response})
+    })
+})
+
 /**
  * catch all
  */
